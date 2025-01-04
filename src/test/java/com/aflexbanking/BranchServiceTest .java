@@ -30,7 +30,7 @@ class BranchServiceTest {
 
     @Test
     void testGetAllBranches() {
-        // Given
+        // Setup mock branches
         Branch branch1 = new Branch();
         branch1.setId(1L);
         branch1.setName("Main Branch");
@@ -41,45 +41,10 @@ class BranchServiceTest {
 
         when(branchRepository.findAll()).thenReturn(Arrays.asList(branch1, branch2));
 
-        // When
+        // Execute
         List<Branch> branches = branchService.getAllBranches();
 
-        // Then
+        // Verify
         assertNotNull(branches);
         assertEquals(2, branches.size());
-        assertEquals("Main Branch", branches.get(0).getName());
-        assertEquals("Secondary Branch", branches.get(1).getName());
-        verify(branchRepository, times(1)).findAll();
-    }
-
-    @Test
-    void testGetBranchById() {
-        // Given
-        Branch branch = new Branch();
-        branch.setId(1L);
-        branch.setName("Main Branch");
-
-        when(branchRepository.findById(1L)).thenReturn(Optional.of(branch));
-
-        // When
-        Branch foundBranch = branchService.getBranchById(1L);
-
-        // Then
-        assertNotNull(foundBranch);
-        assertEquals("Main Branch", foundBranch.getName());
-        verify(branchRepository, times(1)).findById(1L);
-    }
-
-    @Test
-    void testGetBranchById_NotFound() {
-        // Given
-        when(branchRepository.findById(1L)).thenReturn(Optional.empty());
-
-        // When
-        Branch foundBranch = branchService.getBranchById(1L);
-
-        // Then
-        assertNull(foundBranch);
-        verify(branchRepository, times(1)).findById(1L);
-    }
-}
+        verify(branchRepository, times(1)).

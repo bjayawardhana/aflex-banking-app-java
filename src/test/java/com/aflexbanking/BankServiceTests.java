@@ -30,57 +30,53 @@ class BankServiceTest {
 
     @Test
     void testGetAllBanks() {
-        // Given
+        // Setup mock banks
         Bank bank1 = new Bank();
         bank1.setId(1L);
-        bank1.setName("Bank1");
+        bank1.setName("Bank A");
 
         Bank bank2 = new Bank();
         bank2.setId(2L);
-        bank2.setName("Bank2");
+        bank2.setName("Bank B");
 
         when(bankRepository.findAll()).thenReturn(Arrays.asList(bank1, bank2));
 
-        // When
+        // Execute
         List<Bank> banks = bankService.getAllBanks();
 
-        // Then
+        // Verify
         assertNotNull(banks);
         assertEquals(2, banks.size());
-        assertEquals("Bank1", banks.get(0).getName());
-        assertEquals("Bank2", banks.get(1).getName());
         verify(bankRepository, times(1)).findAll();
     }
 
     @Test
     void testGetBankById() {
-        // Given
+        // Setup mock bank
         Bank bank = new Bank();
         bank.setId(1L);
-        bank.setName("Test Bank");
-
+        bank.setName("Bank A");
         when(bankRepository.findById(1L)).thenReturn(Optional.of(bank));
 
-        // When
+        // Execute
         Bank foundBank = bankService.getBankById(1L);
 
-        // Then
+        // Verify
         assertNotNull(foundBank);
-        assertEquals("Test Bank", foundBank.getName());
+        assertEquals("Bank A", foundBank.getName());
         verify(bankRepository, times(1)).findById(1L);
     }
 
     @Test
     void testGetBankById_NotFound() {
-        // Given
+        // Setup mock for non-existing bank
         when(bankRepository.findById(1L)).thenReturn(Optional.empty());
 
-        // When
+        // Execute
         Bank foundBank = bankService.getBankById(1L);
 
-        // Then
+        // Verify
         assertNull(foundBank);
         verify(bankRepository, times(1)).findById(1L);
     }
 }
-

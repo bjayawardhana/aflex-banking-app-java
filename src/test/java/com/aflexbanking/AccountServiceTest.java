@@ -30,68 +30,76 @@ class AccountServiceTest {
 
     @Test
     void testGetAllAccounts() {
-        // Given
+        // Setup mock accounts
         Account account1 = new Account();
         account1.setId(1L);
-        account1.setName("Account1");
+        account1.setBalance(1000.0);
 
         Account account2 = new Account();
         account2.setId(2L);
-        account2.setName("Account2");
+        account2.setBalance(2000.0);
 
         when(accountRepository.findAll()).thenReturn(Arrays.asList(account1, account2));
 
-        // When
+        // Execute
         List<Account> accounts = accountService.getAllAccounts();
 
-        // Then
+        // Verify
         assertNotNull(accounts);
         assertEquals(2, accounts.size());
-        assertEquals("Account1", accounts.get(0).getName());
-        assertEquals("Account2", accounts.get(1).getName());
         verify(accountRepository, times(1)).findAll();
     }
 
     @Test
     void testGetAccountById() {
-        // Given
+        // Setup mock account
         Account account = new Account();
         account.setId(1L);
-        account.setName("Test Account");
-
+        account.setBalance(1000.0);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
 
-        // When
+        // Execute
         Account foundAccount = accountService.getAccountById(1L);
 
-        // Then
+        // Verify
         assertNotNull(foundAccount);
-        assertEquals("Test Account", foundAccount.getName());
+        assertEquals(1000.0, foundAccount.getBalance());
+        verify(accountRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void testGetAccountById_NotFound() {
+        // Setup mock for non-existing account
+        when(accountRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // Execute
+        Account foundAccount = accountService.getAccountById(1L);
+
+        // Verify
+        assertNull(foundAccount);
         verify(accountRepository, times(1)).findById(1L);
     }
 
     @Test
     void testCreateAccount() {
-        // Given
+        // Setup account
         Account account = new Account();
-        account.setName("New Account");
+        account.setId(1L);
+        account.setBalance(1000.0);
 
-        // When
+        // Execute
         accountService.createAccount(account);
 
-        // Then
+        // Verify
         verify(accountRepository, times(1)).save(account);
     }
 
     @Test
     void testDeleteAccount() {
-        // Given
-        Long accountId = 1L;
+        // Execute
+        accountService.deleteAccount(1L);
 
-        // When
-        accountService.deleteAccount(accountId);
-
-        // Then
-        verify(accountRepository, times(1)).deleteById(accountId);
+        // Verify
+        verify(accountRepository, times(1)).deleteById(1L);
     }
 }

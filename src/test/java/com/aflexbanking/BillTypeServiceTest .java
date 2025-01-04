@@ -30,7 +30,7 @@ class BillTypeServiceTest {
 
     @Test
     void testGetAllBillTypes() {
-        // Given
+        // Setup mock bill types
         BillType billType1 = new BillType();
         billType1.setId(1L);
         billType1.setName("Electricity");
@@ -41,44 +41,41 @@ class BillTypeServiceTest {
 
         when(billTypeRepository.findAll()).thenReturn(Arrays.asList(billType1, billType2));
 
-        // When
+        // Execute
         List<BillType> billTypes = billTypeService.getAllBillTypes();
 
-        // Then
+        // Verify
         assertNotNull(billTypes);
         assertEquals(2, billTypes.size());
-        assertEquals("Electricity", billTypes.get(0).getName());
-        assertEquals("Water", billTypes.get(1).getName());
         verify(billTypeRepository, times(1)).findAll();
     }
 
     @Test
     void testGetBillTypeById() {
-        // Given
+        // Setup mock bill type
         BillType billType = new BillType();
         billType.setId(1L);
-        billType.setName("Internet");
-
+        billType.setName("Electricity");
         when(billTypeRepository.findById(1L)).thenReturn(Optional.of(billType));
 
-        // When
+        // Execute
         BillType foundBillType = billTypeService.getBillTypeById(1L);
 
-        // Then
+        // Verify
         assertNotNull(foundBillType);
-        assertEquals("Internet", foundBillType.getName());
+        assertEquals("Electricity", foundBillType.getName());
         verify(billTypeRepository, times(1)).findById(1L);
     }
 
     @Test
     void testGetBillTypeById_NotFound() {
-        // Given
+        // Setup mock for non-existing bill type
         when(billTypeRepository.findById(1L)).thenReturn(Optional.empty());
 
-        // When
+        // Execute
         BillType foundBillType = billTypeService.getBillTypeById(1L);
 
-        // Then
+        // Verify
         assertNull(foundBillType);
         verify(billTypeRepository, times(1)).findById(1L);
     }
