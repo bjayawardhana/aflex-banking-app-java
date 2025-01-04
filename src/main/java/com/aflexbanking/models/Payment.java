@@ -1,9 +1,12 @@
 package com.aflexbanking.models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.Data;
 
 @Entity
+@Data
 public class Payment {
     @Id
     private Long id;
